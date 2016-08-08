@@ -1,0 +1,11 @@
+{
+  "name": "userservice",
+  "version": "0.0.1",
+  "description": "A service to store and manage users as well as do auth",
+  "dependencies": [
+        {
+            "name": "servicelib",
+            "repo": "git@bitbucket.org:panyam/servicelib.git"
+        }
+   ]
+}
