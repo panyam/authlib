@@ -4,9 +4,9 @@ from datetime import datetime
 from flask import request
 from flask_restful import Resource
 import models
-import utils
 import servicelib
 
+from servicelib import utils as slutils
 from servicelib import resources as slresources
 from servicelib.resources import ok_json, error_json
 
@@ -32,13 +32,16 @@ class User(slresources.BaseResource):
         """
         Create a new user.
         """
+        if not slutils.is_dev_mode():
+            return error_json("Not allowed"), 403
+
         fullname = self.ensure_param("fullname")
         phone = request.get_json().get("phone", "").strip()
         email = request.get_json().get("email", "").strip()
-        # TODO: only take in ID if in dev mode
         if not phone and not email:
             return error_json("Either email or phone number required"), 400
 
+        # TODO: only take in ID if in dev mode
         id = None
         if request.get_json().get("id", 0) > 0:
             id = request.get_json().get("id")
@@ -77,3 +80,22 @@ class User(slresources.BaseResource):
             return ok_json("OK"), 200
         else:
             return error_json("User not found"), 404
+
+    def do_action_register(self, **kwargs):
+        """
+        Register a user.   This only creates a new user but marks the user as inactive until
+        verification is done.
+        """
+        pass
+
+    def do_action_verify(self, **kwargs):
+        """
+        Verifies a registered user.
+        """
+        pass
+
+    def do_action_authenticate(self, **kwargs):
+        """
+        Performs a user authentication.
+        """
+        pass
