@@ -5,15 +5,6 @@ from servicelib import models as slmodels
 
 
 class User(slmodels.ModelBase):
-    fullname = ndb.StringProperty()
-    password_hash = ndb.StringProperty(default="")
-    phone = ndb.StringProperty(default="")
-    email = ndb.StringProperty(default="")
-    is_active = ndb.BooleanProperty(default=True)
-    last_update_at = ndb.DateTimeProperty(auto_now_add=True)
-    authy_id = ndb.IntegerProperty()
-    authy_status = msgprop.EnumProperty(AUTHY_STATUSES, required=True, indexed=True)
-
     AUTHY_STATUSES = (
         'unverified',
         'onetouch',
@@ -22,6 +13,15 @@ class User(slmodels.ModelBase):
         'approved',
         'denied'
     )
+
+    fullname = ndb.StringProperty()
+    password_hash = ndb.StringProperty(default="")
+    phone = ndb.StringProperty(default="")
+    email = ndb.StringProperty(default="")
+    is_active = ndb.BooleanProperty(default=True)
+    last_update_at = ndb.DateTimeProperty(auto_now_add=True)
+    authy_id = ndb.IntegerProperty()
+    authy_status = msgprop.EnumProperty(AUTHY_STATUSES, required=True, indexed=True)
 
     def to_json(self):
         return {
