@@ -8,6 +8,7 @@ import servicelib
 
 from servicelib import utils as slutils
 from servicelib import resources as slresources
+from servicelib import decorators as sldecorators
 from servicelib.resources import ok_json, error_json
 
 class User(slresources.BaseResource):
@@ -28,6 +29,7 @@ class User(slresources.BaseResource):
             return error_json("Not Found"), 404
         return user.to_json()
 
+    @sldecorators.ensure_param("fullname")
     def do_create(self, **kwargs):
         """
         Create a new user.
@@ -35,7 +37,7 @@ class User(slresources.BaseResource):
         if not slutils.is_dev_mode():
             return error_json("Not allowed"), 403
 
-        fullname = self.ensure_param("fullname")
+        fullname = kwargs["fullname"]
         phone = request.get_json().get("phone", "").strip()
         email = request.get_json().get("email", "").strip()
         if not phone and not email:
