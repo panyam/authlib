@@ -5,7 +5,7 @@
   "dependencies": [
         {
             "name": "servicelib",
-            "repo": "git@bitbucket.org:panyam/servicelib.git"
+            "repo": "https://github.com/panyam/userservice.git"
         }
    ]
 }
