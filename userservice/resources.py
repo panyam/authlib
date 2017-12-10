@@ -38,35 +38,33 @@ class User(slresources.BaseResource):
             return error_json("Not allowed"), 403
 
         fullname = kwargs["fullname"]
-        phone = request.get_json().get("phone", "").strip()
-        email = request.get_json().get("email", "").strip()
+        phone = kwargs.get("phone", "").strip()
+        email = kwargs.get("email", "").strip()
         if not phone and not email:
             return error_json("Either email or phone number required"), 400
 
-        # TODO: only take in ID if in dev mode
-        id = None
-        if request.get_json().get("id", 0) > 0:
-            id = request.get_json().get("id")
+        id = slutils.get_custom_id(kwargs)
         newuser = self.ResourceModel(fullname=fullname,
-                                      phone=phone, 
-                                      email=email, 
-                                      id = id)
+                                     phone=phone, 
+                                     email=email, 
+                                     id = id)
         newuser.put()
         return newuser.to_json()
 
-    def do_put(self, userid):
+    def do_put(self, userid, **kwargs):
         """
         Update user data
         """
         user = self.ResourceModel.get_by_id(long(userid))
+        if not user:
+            return error_json("User not found"), 404
+        import pdb ; pdb.set_trace()
 
-        fullname = request.get_json().get("fullname", "").strip()
-        phone = request.get_json().get("phone", "").strip()
+        fullname = kwargs.get("fullname", "").strip()
+        phone = kwargs.get("phone", "").strip()
+        if fullname: user.fullname = fullname
+        if phone: user.phone = phone
 
-        if fullname:
-            user.fullname = fullname
-        if phone:
-            user.phone = phone
         user.put()
         return user.to_json()
 
@@ -75,13 +73,12 @@ class User(slresources.BaseResource):
         Delete a user
         """
         user = self.ResourceModel.get_by_id(long(userid))
-        if user:
-            user.is_active = False
-            user.last_update_at = datetime.now()
-            user.put()
-            return ok_json("OK"), 200
-        else:
+        if not user:
             return error_json("User not found"), 404
+        user.is_active = False
+        user.last_update_at = datetime.now()
+        user.put()
+        return ok_json("OK"), 200
 
     def do_action_register(self, **kwargs):
         """
