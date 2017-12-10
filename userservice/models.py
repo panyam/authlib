@@ -7,8 +7,8 @@ from servicelib import models as slmodels
 class User(slmodels.ModelBase):
     fullname = ndb.StringProperty()
     password_hash = ndb.StringProperty(default="")
-    phone = ndb.StringProperty(default="")
-    email = ndb.StringProperty(default="")
+    phone = ndb.StringProperty(default="", indexed = True)
+    email = ndb.StringProperty(default="", indexed = True)
     is_active = ndb.BooleanProperty(default=True)
     last_update_at = ndb.DateTimeProperty(auto_now_add=True)
 

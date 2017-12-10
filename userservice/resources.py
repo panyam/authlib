@@ -30,6 +30,7 @@ class User(slresources.BaseResource):
         return user.to_json()
 
     @sldecorators.ensure_param("fullname")
+    @sldecorators.ensure_param("email")
     def do_create(self, **kwargs):
         """
         Create a new user.
@@ -38,10 +39,8 @@ class User(slresources.BaseResource):
             return error_json("Not allowed"), 403
 
         fullname = kwargs["fullname"]
+        email = kwargs["email"]
         phone = kwargs.get("phone", "").strip()
-        email = kwargs.get("email", "").strip()
-        if not phone and not email:
-            return error_json("Either email or phone number required"), 400
 
         id = slutils.get_custom_id(kwargs)
         newuser = self.ResourceModel(fullname=fullname,
