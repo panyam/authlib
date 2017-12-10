@@ -24,7 +24,8 @@ class User(slresources.BaseResource):
                 '/users/']
 
     def do_get(self, userid):
-        user = self.ResourceModel.get_by_id(long(userid))
+        user = self.ResourceModel.get_by_id(userid)
+        import pdb ; pdb.set_trace()
         if not user:
             return error_json("Not Found"), 404
         return user.to_json()
@@ -54,7 +55,7 @@ class User(slresources.BaseResource):
         """
         Update user data
         """
-        user = self.ResourceModel.get_by_id(long(userid))
+        user = self.ResourceModel.get_by_id(userid)
         if not user:
             return error_json("User not found"), 404
         import pdb ; pdb.set_trace()
@@ -71,7 +72,7 @@ class User(slresources.BaseResource):
         """
         Delete a user
         """
-        user = self.ResourceModel.get_by_id(long(userid))
+        user = self.ResourceModel.get_by_id(userid)
         if not user:
             return error_json("User not found"), 404
         user.is_active = False
